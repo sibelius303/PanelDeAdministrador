@@ -1,147 +1,132 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import DataTable from "react-data-table-component";
 
 export default function TablaPanel() {
+    const [users, setUsers] = useState([])
+    const [aux, setAux] = useState(0)
 
-    const data = [
-        {
-            id: 1,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 2,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 3,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 4,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 5,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 6,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 7,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 8,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 9,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 10,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 11,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 12,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
-        {
-            id: 13,
-            nombre: "Cesar Vallenilla",
-            correo: "cesarev17@gmail.com",
-            dateAfiliacion: "12/01/2023",
-            gymAfiliados: "5",
-            active: true,
-        },
+    const activeSwitcher = async (userId, isActive) => {
+        let switcher;
+        if (isActive) switcher = false
+        else switcher = true
 
-    ]
+        try {
+            const { data } = await axios.put("https://gymapi.up.railway.app/userupdater", { isActive: switcher, userId })
+            setAux((prev) => prev + 1)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    const automatic = async () => {
+        console.log("entro")
+        try {
+            const { data } = await axios.put("https://gymapi.up.railway.app/disabler")
+            setAux((prev) => prev + 1)
+            alert(data.msg)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        axios.get("https://gymapi.up.railway.app/getusers").then((res) => {
+            let result = res.data.users.sort((a, b) => {
+                if (a.id < b.id) {
+                    return -1;
+                } else if (a.id > b.id) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            })
+            setUsers(result)
+        }).catch(err => alert("Error server")
+        )
+
+
+        return () => {
+            setUsers([])
+        }
+    }, [aux])
+
 
     const columnas = [
         {
+            name: "id",
+            selector: row => row.id,
+            sortable: true,
+            sortFunction: (a, b) => {
+                if (a.id > b.id) {
+                    return -1;
+                } else if (a.id < b.id) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+
+        },
+        {
             name: 'Nombre',
-            selector: row => row.nombre,
+            selector: row => row.fullname,
         },
         {
             name: 'Correo',
-            selector: row => row.correo,
+            selector: row => row.email,
         },
         {
             name: 'Fecha de Afiliacion',
-            selector: row => row.dateAfiliacion,
+            selector: row => {
+                let result = row.creado.split("T")[0]
+                return result
+            },
+        },
+        {
+            name: 'Expira',
+            selector: row => row.expire,
+        },
+        {
+            name: "Estado",
+            selector: row => {
+                if (row.isActive == true) {
+                    return "Activo"
+                } else {
+                    return "Inactivo"
+                }
+            },
+            sortable: true,
+            sortFunction: (a, b) => {
+                if (a.isActive > b.isActive) {
+                    return -1;
+                } else if (a.isActive < b.isActive) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
         },
         {
             name: 'Gimnasios Afiliados',
-            selector: row => row.gymAfiliados,
+            selector: row => row.gyms.length,
         },
         {
             name: 'Habilitar o Deshabilitar',
+
             cell: row => {
-                if (row.active == true) {
-                    return(
-                    <button className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'>
-                        off
-                    </button>
+                if (row.isActive == true) {
+                    return (
+                        <button onClick={(e) => activeSwitcher(row.id, row.isActive)} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'>
+                            off
+                        </button>
                     )
                 } else {
-                    return(
-                    <button className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'>
-                        on
-                    </button>)
+                    return (
+                        <button onClick={(e) => activeSwitcher(row.id, row.isActive)} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'>
+                            on
+                        </button>)
                 }
             }
         },
@@ -149,11 +134,16 @@ export default function TablaPanel() {
 
     return (
         <div>
+
+            <button onClick={(e) => automatic()} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'>
+                Desahbilitar Usuarios morosos
+            </button>
+
             <DataTable
                 columns={columnas}
-                data={data}
-                pagination
+                data={users}
                 fixedHeader
+                pagination
                 fixedHeaderScrollHeight="400px"
                 expandableRows
             />
