@@ -52,6 +52,10 @@ export default function TablaPanel() {
         }
     }, [aux])
 
+    const handleClick = (row) => {
+        console.log(row.fullname)
+    }
+
 
     const columnas = [
         {
@@ -145,7 +149,8 @@ export default function TablaPanel() {
                 fixedHeader
                 pagination
                 fixedHeaderScrollHeight="400px"
-                expandableRows
+                onRowClicked={handleClick}
+                highlightOnHover
             />
         </div>
     )
