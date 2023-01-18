@@ -152,6 +152,7 @@ export default function TablaPanel() {
             </button>
 
             <DataTable
+                className="cursor-pointer"
                 columns={columnas}
                 data={users}
                 fixedHeader

@@ -41,8 +41,8 @@ export default function id() {
                 </div>
             </div>
             <h1 className=" text-center text-6xl text-slate-500 my-1">Gimnasios Asociados</h1>
-            <div className="m-20 flex justify-center">
-                <div className="flex gap-10">
+            <div className="m-20">
+                <div className="flex justify-center gap-10 flex-wrap">
                     {
                         user.gyms?.map((gym, id) => (
                             <div className=" border-4 p-4" key={id}>
