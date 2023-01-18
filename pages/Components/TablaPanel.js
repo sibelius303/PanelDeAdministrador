@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
+import { useRouter } from "next/router";
 
 export default function TablaPanel() {
     const [users, setUsers] = useState([])
     const [aux, setAux] = useState(0)
+    const router = useRouter();
+
 
     const activeSwitcher = async (userId, isActive) => {
         let switcher;
@@ -41,8 +44,11 @@ export default function TablaPanel() {
                 } else {
                     return 0;
                 }
+
+            x
             })
             setUsers(result)
+            console.log(result[0])
         }).catch(err => alert("Error server")
         )
 
@@ -53,7 +59,9 @@ export default function TablaPanel() {
     }, [aux])
 
     const handleClick = (row) => {
-        console.log(row.fullname)
+        router.push(`/PerfilesUsuarios/${row.id}`);
+
+
     }
 
 
