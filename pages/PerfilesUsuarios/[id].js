@@ -3,48 +3,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function id() {
-    const [user, setUser] = useState({})
     const router = useRouter()
-
-    const Gym1 = {
-        active: true,
-        creado: "2022-12-01T21:18:34.406Z",
-        id: 9,
-        name: "Los rompe diskotecas",
-        rif: "J-25217739",
-        userId: 1
-    }
-
-    const Gym2 = {
-        active: true,
-        creado: "2022-12-01T21:18:34.406Z",
-        id: 23,
-        name: "Pepe lando",
-        rif: "J-954661021",
-        userId: 1
-    }
-
-    const DataPrueba = {
-        address: "pepeland",
-        birthDate: "1995-09-26",
-        cellphone: "4145231923",
-        creado: "2022-12-01T16:19:05.863Z",
-        email: "roger.perezcol@gmail.com",
-        expire: "2022-12-19",
-        fullname: "Pepe lando ",
-        gyms: [Gym1, Gym2],
-        id: 1,
-        isActive: false,
-        isAdmin: false,
-        password: "$2b$10$Q5I1IlWwZ9U2h1vgzCCnIOdy8aG38VssUozpQWGYt1sfSFAbxc5e6"
-    }
+    const [user, setUser] = useState(false)
 
     useEffect(() => {
-        setUser(DataPrueba)
-    }, [])
-
-    console.log(user)
-
+        if (router.isReady) {
+            axios.get(`https://gymapi.up.railway.app/userdetail/${router.query.id}`).then((res) => {
+                setUser(res.data.user)
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+    }, [router.isReady])
 
 
 
@@ -52,7 +22,7 @@ export default function id() {
         <div>
             <div className="m-20">
                 <h1 className=" text-center text-6xl text-slate-500 mb-5">{user.fullname}</h1>
-                <h5 className="text-center text-xl text-slate-500">Creado: {user.creado}</h5>
+                <h5 className="text-center text-xl text-slate-500">Cliente desde: {user.creado?.split("T")[0]}</h5>
                 <h5 className="text-center text-xl text-slate-500">Expira: {user.expire}</h5>
                 <div className="flex justify-center w-full mt-10">
                     <div className=" flex gap-10 w-4/5 border-4 p-4">
@@ -61,6 +31,7 @@ export default function id() {
                             <p><b>Telefono: </b>{user.cellphone} </p>
                             <p><b>Cumpleaños: </b>{user.birthDate}</p>
                             <p><b>Direccion: </b>{user.address}</p>
+
                         </div>
                         <div className="w-1/2">
                             <p><b>Id: </b>{user.id}</p>
@@ -79,8 +50,13 @@ export default function id() {
                                 <p><b>id: </b>{gym.id}</p>
                                 <p><b>rif: </b>{gym.rif}</p>
                                 <p><b> Id de Usuario: </b>{gym.userId}</p>
-                                <p><b>Fecha de Creacion: </b>{gym.creado}</p>
+                                <p><b>Fecha de Creacion: </b>{(gym.creado).split("T")[0]}</p>
                                 <p><b>Habilitacion: </b>{gym.active == true ? ("Activa") : ("Desactivada")}</p>
+                                <p><b>Facturacion Anual: </b>USD/Ref {gym.totalRefAnual}</p>
+                                <p><b>Clientes activos : </b>{gym.customers.active}</p>
+                                <p><b>Clientes Inactivos : </b>{gym.customers.inactive}</p>
+
+
                             </div>
 
 
