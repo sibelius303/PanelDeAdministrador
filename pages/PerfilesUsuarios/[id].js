@@ -24,6 +24,33 @@ export default function id() {
         userId: 1
     }
 
+    const Gym3 = {
+        active: true,
+        creado: "2022-12-01T21:18:34.406Z",
+        id: 23,
+        name: "El Perro",
+        rif: "J-954661021",
+        userId: 1
+    }
+
+    const Gym4 = {
+        active: true,
+        creado: "2022-12-01T21:18:34.406Z",
+        id: 23,
+        name: "King in the North",
+        rif: "J-954661021",
+        userId: 1
+    }
+
+    const Gym5 = {
+        active: true,
+        creado: "2022-12-01T21:18:34.406Z",
+        id: 23,
+        name: "King in the North",
+        rif: "J-954661021",
+        userId: 1
+    }
+
     const DataPrueba = {
         address: "pepeland",
         birthDate: "1995-09-26",
@@ -32,7 +59,7 @@ export default function id() {
         email: "roger.perezcol@gmail.com",
         expire: "2022-12-19",
         fullname: "Pepe lando ",
-        gyms: [Gym1, Gym2],
+        gyms: [Gym1, Gym2, Gym3, Gym4, Gym5],
         id: 1,
         isActive: false,
         isAdmin: false,
@@ -70,8 +97,8 @@ export default function id() {
                 </div>
             </div>
             <h1 className=" text-center text-6xl text-slate-500 my-1">Gimnasios Asociados</h1>
-            <div className="m-20 flex justify-center">
-                <div className="flex gap-10">
+            <div className="m-20">
+                <div className="flex justify-center gap-10 flex-wrap">
                     {
                         user.gyms?.map((gym, id) => (
                             <div className=" border-4 p-4" key={id}>
