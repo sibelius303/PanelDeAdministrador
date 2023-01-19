@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
+import axios from 'axios'
 
 export default function Home() {
   const route = useRouter()
@@ -23,9 +24,21 @@ export default function Home() {
 
             }}
             enableReinitialize={true}
-            onSubmit={(values) => {
-              console.log(values);
-              route.push("/PanelAdministrador")
+            onSubmit={async(values) => {
+              try {
+                values.email= values.email.toLowerCase()
+                const {data}= await axios.post(`https://gymapi.up.railway.app/adminlogin`, values)
+                console.log(values);
+                if (data.user && data.token ){
+                  route.push("/PanelAdministrador")
+
+                }else alert( data.msg)
+
+              } catch (error) {
+                console.log(error)
+                alert("Ha ocurrido un error")
+              }
+          
             }}
             validationSchema={ValidarSchema}
 
