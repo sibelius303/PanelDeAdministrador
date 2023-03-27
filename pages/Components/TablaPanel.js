@@ -97,6 +97,14 @@ export default function TablaPanel() {
             },
         },
         {
+            name: 'Plan',
+            selector: row => "basico"
+        },
+        {
+            name: 'Precio del Plan',
+            selector: row => "30$"
+        },
+        {
             name: 'Expira',
             selector: row => row.expire,
         },
